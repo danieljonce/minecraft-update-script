@@ -3,6 +3,11 @@ set -euo pipefail
 #
 # update-mc-plugins.sh
 # ===========================================================================
+# Version:   1.0.0
+# Copyright: (c) 2026 Daniel Jonce Evans
+# License:   MIT
+# Source:    https://github.com/danieljonce/minecraft-update-script
+# ===========================================================================
 # Keeps a Paper/Spigot server's cross-version + Bedrock plugins up to date, and
 # tells you which Paper (Minecraft) version is safe to run.
 #
