@@ -90,7 +90,7 @@ It works with **any** Minecraft install that has a `plugins/` folder — a plain
 
 ## Why
 
-Chasing the newest Paper release breaks things. Geyser only ever supports the newest Minecraft version *it* has caught up to, and it usually lags a few days behind a Minecraft release. Update Paper on day one and Bedrock support silently dies.
+Chasing the newest Paper release breaks things. Geyser only ever supports the newest Minecraft version *it* has caught up to, and it often lags days or weeks behind a Minecraft release. Update Paper on day one and Bedrock support silently dies.
 
 This script inverts the problem:
 
