@@ -21,6 +21,59 @@ update-mc-plugins.sh --plugins-dir <path> [options]
 
 Quote the path if it contains spaces: `update-mc-plugins.sh "/srv/my server"`
 
+## Requirements
+
+- Linux (or anything with bash)
+- `bash`, `curl`, `jq`, `sha256sum` (coreutils), `flock` (util-linux)
+
+```bash
+# Debian / Ubuntu
+sudo apt install jq curl coreutils util-linux
+```
+
+Run it as **the user that owns the server files** (the script checks the plugins folder is writable).
+
+---
+
+## Quick start
+
+Always dry-run first. It resolves everything, prints the full plan, and changes nothing:
+
+```bash
+update-mc-plugins.sh /path/to/server --dry-run
+```
+
+Then run it for real:
+
+```bash
+update-mc-plugins.sh /path/to/server
+```
+
+**Stop your server first.** Swapping jars under a running server does nothing until the next restart, and can leave a plugin's on-disk jar out of sync with the running code.
+
+The script checks whether a java process is using that directory and reports it every run:
+
+```
+server state: stopped (no java process using this directory)
+```
+
+If the server **is** running and this isn't a dry-run, it asks before touching anything:
+
+```
+WARNING: Server appears to be RUNNING (pid 4127).
+WARNING: Jars swapped now will NOT load until you restart, and a plugin's
+         on-disk jar may not match the running code.
+Continue anyway? [y/N]
+```
+
+Pressing Enter (the default) aborts safely. Pass `-y`/`--yes` to skip the question.
+
+**From cron there is no prompt** — it never blocks waiting for input that will never come. It warns, proceeds, and reminds you to restart. If you want cron to leave a running server strictly alone, bracket the job with a stop/start (see [Daily cron job](#daily-cron-job)).
+
+---
+
+## What
+
 It manages five plugins, each fetched from its project's **official** channel:
 
 | Plugin | Purpose | Source |
@@ -35,7 +88,7 @@ It works with **any** Minecraft install that has a `plugins/` folder — a plain
 
 ---
 
-## Why it exists
+## Why
 
 Chasing the newest Paper release breaks things. Geyser only ever supports the newest Minecraft version *it* has caught up to, and it usually lags a few days behind a Minecraft release. Update Paper on day one and Bedrock support silently dies.
 
@@ -53,19 +106,7 @@ Then **ViaVersion** does the rest: players whose clients auto-update to a versio
 
 ---
 
-## Requirements
-
-- Linux (or anything with bash)
-- `bash`, `curl`, `jq`, `sha256sum` (coreutils), `flock` (util-linux)
-
-```bash
-# Debian / Ubuntu
-sudo apt install jq curl coreutils util-linux
-```
-
-Run it as **the user that owns the server files** (the script checks the plugins folder is writable).
-
-## Install
+## How
 
 The script is a single self-contained file. "Installing" it just means putting it somewhere permanent and making it executable — there's nothing to compile and no dependencies to vendor.
 
@@ -105,43 +146,6 @@ If you'd rather not use `sudo`, keep it anywhere you own and call it by absolute
 chmod +x ~/update-mc-plugins.sh
 /home/youruser/update-mc-plugins.sh /path/to/server --dry-run
 ```
-
----
-
-## Quick start
-
-Always dry-run first. It resolves everything, prints the full plan, and changes nothing:
-
-```bash
-/opt/scripts/update-mc-plugins.sh /path/to/server --dry-run
-```
-
-Then run it for real:
-
-```bash
-/opt/scripts/update-mc-plugins.sh /path/to/server
-```
-
-**Stop your server first.** Swapping jars under a running server does nothing until the next restart, and can leave a plugin's on-disk jar out of sync with the running code.
-
-The script checks whether a java process is using that directory and reports it every run:
-
-```
-server state: stopped (no java process using this directory)
-```
-
-If the server **is** running and this isn't a dry-run, it asks before touching anything:
-
-```
-WARNING: Server appears to be RUNNING (pid 4127).
-WARNING: Jars swapped now will NOT load until you restart, and a plugin's
-         on-disk jar may not match the running code.
-Continue anyway? [y/N]
-```
-
-Pressing Enter (the default) aborts safely. Pass `-y`/`--yes` to skip the question.
-
-**From cron there is no prompt** — it never blocks waiting for input that will never come. It warns, proceeds, and reminds you to restart. If you want cron to leave a running server strictly alone, bracket the job with a stop/start (see [Daily cron job](#daily-cron-job)).
 
 ---
 
