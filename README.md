@@ -10,6 +10,17 @@ curl -fsSL -o update-mc-plugins.sh https://raw.githubusercontent.com/danieljonce
 
 Re-run the same command any time to pull the latest version. (See [Install](#install) for putting it somewhere permanent.)
 
+## Usage
+
+```
+update-mc-plugins.sh <server-dir> [options]
+update-mc-plugins.sh --plugins-dir <path> [options]
+```
+
+`<server-dir>` is a **positional** argument — the folder containing your server jar and `plugins/`. There is no `--server-dir` flag.
+
+Quote the path if it contains spaces: `update-mc-plugins.sh "/srv/my server"`
+
 It manages five plugins, each fetched from its project's **official** channel:
 
 | Plugin | Purpose | Source |
@@ -133,17 +144,6 @@ Pressing Enter (the default) aborts safely. Pass `-y`/`--yes` to skip the questi
 **From cron there is no prompt** — it never blocks waiting for input that will never come. It warns, proceeds, and reminds you to restart. If you want cron to leave a running server strictly alone, bracket the job with a stop/start (see [Daily cron job](#daily-cron-job)).
 
 ---
-
-## Usage
-
-```
-update-mc-plugins.sh <server-dir> [options]
-update-mc-plugins.sh --plugins-dir <path> [options]
-```
-
-`<server-dir>` is a **positional** argument — the folder containing your server jar and `plugins/`. There is no `--server-dir` flag.
-
-Quote the path if it contains spaces: `update-mc-plugins.sh "/srv/my server"`
 
 ### Options
 
