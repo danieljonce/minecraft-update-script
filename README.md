@@ -1,6 +1,14 @@
-# minecraft-update-script
+# Minecraft Update Script
 
 Keeps a **Paper/Spigot** Minecraft server's cross-version and Bedrock plugins up to date, and tells you which Paper version is actually safe to run.
+
+## Get it
+
+```bash
+curl -fsSL -o update-mc-plugins.sh https://raw.githubusercontent.com/danieljonce/minecraft-update-script/main/update-mc-plugins.sh && chmod +x update-mc-plugins.sh
+```
+
+Re-run the same command any time to pull the latest version. (See [Install](#install) for putting it somewhere permanent.)
 
 It manages five plugins, each fetched from its project's **official** channel:
 
@@ -54,16 +62,23 @@ The script is a single self-contained file. "Installing" it just means putting i
 # 1. create a place for it (only needed once)
 sudo mkdir -p /opt/scripts
 
-# 2. copy it there and make it executable in one step
+# 2. download it there and make it executable
+sudo curl -fsSL -o /opt/scripts/update-mc-plugins.sh \
+  https://raw.githubusercontent.com/danieljonce/minecraft-update-script/main/update-mc-plugins.sh
+sudo chmod +x /opt/scripts/update-mc-plugins.sh
+```
+
+Re-run those two commands to update to the latest version. The `-f` flag matters: without it, a failed download writes GitHub's 404 page into your script file instead of erroring out.
+
+> **Don't put the download in cron.** Auto-pulling and running a script unattended means any bad commit executes on your server. Pull when you intend to, then `--dry-run` before the real run.
+
+If you already have the file locally, `install` copies it and sets permissions in one step:
+
+```bash
 sudo install -m 755 update-mc-plugins.sh /opt/scripts/update-mc-plugins.sh
 ```
 
-`install` is a standard Unix tool that copies a file and sets its permissions at the same time. `-m 755` means *owner can read/write/execute, everyone else can read/execute* — i.e. it lands ready to run. It's equivalent to:
-
-```bash
-sudo cp update-mc-plugins.sh /opt/scripts/update-mc-plugins.sh
-sudo chmod 755 /opt/scripts/update-mc-plugins.sh
-```
+`-m 755` means *owner can read/write/execute, everyone else can read/execute* — i.e. it lands ready to run. It's equivalent to a `cp` followed by `chmod 755`.
 
 `/opt/scripts` is just a convention for locally-installed scripts — nothing depends on it. Any stable path works, as long as **cron can reach it** (which is why a home directory like `~/update-mc-plugins.sh` is a poor choice for a scheduled job: `~` isn't reliably defined in cron's environment).
 
